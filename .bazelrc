@@ -1,10 +1,6 @@
-#####################
-### BUILD OPTIONS ###
-#####################
-build --symlink_prefix=dist/ --worker_sandboxing
-
-# Performance: avoid stat'ing input files
-build --watchfs
-
-# https://docs.bazel.build/versions/master/command-line-reference.html#build-options
-build --local_termination_grace_seconds=3
+# This module's own builds and tests run on rules_java's OpenJDK 25. A consuming build runs
+# the rules on the JDK it selects.
+build --java_runtime_version=remotejdk_25
+build --tool_java_runtime_version=remotejdk_25
+build --java_language_version=25
+build --tool_java_language_version=25

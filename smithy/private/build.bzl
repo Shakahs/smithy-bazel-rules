@@ -45,6 +45,11 @@ smithy_build = rule(
 The directory holds what the plugin wrote, the projection's
 `<projection>/<plugin>` folder of a `smithy build` output tree.""",
     attrs = MODEL_ATTRS | CLI_ATTRS | {
+        # A projection may build a published model alone, which its deps carry.
+        "srcs": attr.label_list(
+            allow_files = [".smithy", ".json"],
+            doc = "The model's IDL or JSON AST files, beside the models its deps carry.",
+        ),
         "config": attr.label(
             allow_single_file = [".json"],
             mandatory = True,

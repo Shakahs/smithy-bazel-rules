@@ -1,0 +1,13 @@
+package(default_visibility = ["//visibility:public"])
+
+# The Smithy CLI the rules run.
+alias(
+    name = "cli",
+    actual = "@rules_smithy_maven//:software_amazon_smithy_smithy_cli",
+)
+
+# The AWS trait definitions, a model library.
+alias(
+    name = "aws_traits",
+    actual = "@rules_smithy_maven//:software_amazon_smithy_smithy_aws_traits",
+)

@@ -1,0 +1,45 @@
+"""Bazel rules for Smithy models: model libraries, `smithy build` plugin outputs and JSON ASTs."""
+
+module(
+    name = "rules_smithy",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "rules_java", version = "9.6.1")
+bazel_dep(name = "rules_jvm_external", version = "7.1")
+bazel_dep(name = "bazel_skylib", version = "1.9.2", dev_dependency = True)
+
+# The Smithy version of the CLI and of every model and plugin artifact below. The CLI runs
+# its build plugins in its own JVM, so they are resolved together, against one Smithy.
+SMITHY_VERSION = "1.74.0"
+
+# smithy-rs publishes its code generators as Smithy build plugins.
+SMITHY_RS_VERSION = "0.1.31"
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    name = "rules_smithy_maven",
+    artifacts = [
+        "software.amazon.smithy:smithy-cli:" + SMITHY_VERSION,
+        # The AWS trait definitions (protocols such as aws.protocols#restJson1, sigv4, ...),
+        # a model library like any other.
+        "software.amazon.smithy:smithy-aws-traits:" + SMITHY_VERSION,
+        # The Kotlin standard library smithy-rs is built with (see codegen-client below).
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0",
+    ],
+    # Run `REPIN=1 bazel run @rules_smithy_maven//:pin` here after changing an artifact.
+    lock_file = "//:maven_install.json",
+    resolver = "maven",
+)
+
+# The `rust-client-codegen` plugin. smithy-rs publishes from Gradle, whose module metadata
+# carries its Kotlin version; the POMs Maven reads name it `unspecified`, so that edge is
+# excluded and the version is declared above.
+maven.artifact(
+    name = "rules_smithy_maven",
+    artifact = "codegen-client",
+    exclusions = ["org.jetbrains.kotlin:kotlin-stdlib-jdk8"],
+    group = "software.amazon.smithy.rust",
+    version = SMITHY_RS_VERSION,
+)
+use_repo(maven, "rules_smithy_maven")

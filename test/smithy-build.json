@@ -1,5 +1,5 @@
 {
-    "version": "2.0",
+    "version": "1.0",
     "projections": {
         "model": {
             "transforms": [
@@ -7,7 +7,21 @@
                     "name": "removeUnusedShapes",
                     "args": {}
                 }
-            ]
+            ],
+            "plugins": {
+                "model": {}
+            }
+        },
+        "rust-client": {
+            "plugins": {
+                "rust-client-codegen": {
+                    "service": "example.weather#Weather",
+                    "module": "weather-client",
+                    "moduleVersion": "0.0.0",
+                    "moduleAuthors": ["rules_smithy"],
+                    "moduleDescription": "The Weather service client the rules_smithy tests generate"
+                }
+            }
         }
     }
 }

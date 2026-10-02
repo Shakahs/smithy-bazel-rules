@@ -1,0 +1,7 @@
+package(default_visibility = ["//visibility:public"])
+
+# smithy-rs's Rust client generator, the `rust-client-codegen` plugin.
+alias(
+    name = "rust_client_codegen",
+    actual = "@rules_smithy_maven//:software_amazon_smithy_rust_codegen_client",
+)

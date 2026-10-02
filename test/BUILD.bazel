@@ -1,0 +1,51 @@
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("//smithy:defs.bzl", "smithy_ast", "smithy_build", "smithy_library")
+
+# A model library: the shapes the Weather model imports from another package.
+smithy_library(
+    name = "pagination",
+    srcs = glob(["other/**/*.smithy"]),
+)
+
+WEATHER_DEPS = [
+    ":pagination",
+    "//smithy:aws_traits",
+]
+
+smithy_ast(
+    name = "weather_ast",
+    srcs = glob(["model/**/*.smithy"]),
+    deps = WEATHER_DEPS,
+)
+
+# A built-in plugin: the projection's transformed model.
+smithy_build(
+    name = "weather_model",
+    srcs = glob(["model/**/*.smithy"]),
+    config = "smithy-build.json",
+    plugin = "model",
+    projection = "model",
+    deps = WEATHER_DEPS,
+)
+
+# A plugin loaded into the CLI: smithy-rs's Rust client generator.
+smithy_build(
+    name = "weather_rust_client",
+    srcs = glob(["model/**/*.smithy"]),
+    config = "smithy-build.json",
+    plugin = "rust-client-codegen",
+    plugins = ["//smithy/plugins:rust_client_codegen"],
+    projection = "rust-client",
+    deps = WEATHER_DEPS,
+)
+
+build_test(
+    name = "rules_test",
+    targets = [
+        ":pagination",
+        ":weather_ast",
+        ":weather_model",
+        ":weather_rust_client",
+        "//smithy/validation:validators",
+    ],
+)

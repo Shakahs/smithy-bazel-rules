@@ -1,0 +1,8 @@
+load("//smithy:defs.bzl", "smithy_library")
+
+# The style validators as a model library: depending on it applies them to a model.
+smithy_library(
+    name = "validators",
+    srcs = glob(["validators/*.smithy"]),
+    visibility = ["//visibility:public"],
+)

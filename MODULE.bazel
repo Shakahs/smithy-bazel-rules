@@ -26,6 +26,15 @@ maven.install(
         "software.amazon.smithy:smithy-aws-traits:" + SMITHY_VERSION,
         # The Kotlin standard library smithy-rs is built with (see codegen-client below).
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0",
+        # What smithy-go's code generators compile and run against (//smithy/plugins:go_codegen_deps):
+        # smithy-go publishes no jar, only its sources, so a module builds its plugins from them.
+        "software.amazon.smithy:smithy-codegen-core:" + SMITHY_VERSION,
+        "software.amazon.smithy:smithy-waiters:" + SMITHY_VERSION,
+        "software.amazon.smithy:smithy-rules-engine:" + SMITHY_VERSION,
+        "software.amazon.smithy:smithy-protocol-test-traits:" + SMITHY_VERSION,
+        "software.amazon.smithy:smithy-protocol-traits:" + SMITHY_VERSION,
+        "com.atlassian.commonmark:commonmark:0.15.2",
+        "org.jsoup:jsoup:1.14.1",
     ],
     # Run `REPIN=1 bazel run @rules_smithy_maven//:pin` here after changing an artifact.
     lock_file = "//:maven_install.json",

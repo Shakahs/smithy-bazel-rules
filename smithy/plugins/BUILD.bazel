@@ -1,7 +1,30 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
 package(default_visibility = ["//visibility:public"])
 
 # smithy-rs's Rust client generator, the `rust-client-codegen` plugin.
 alias(
     name = "rust_client_codegen",
     actual = "@rules_smithy_maven//:software_amazon_smithy_rust_codegen_client",
+)
+
+# What smithy-go's code generators (`go-codegen`, `go-shape-codegen`) compile against and run
+# with, at the Smithy version of the CLI that loads them. smithy-go publishes its generators as
+# sources only, so a module compiles them from the smithy-go module it fetches against these.
+java_library(
+    name = "go_codegen_deps",
+    exports = [
+        "@rules_smithy_maven//:com_atlassian_commonmark_commonmark",
+        "@rules_smithy_maven//:org_jsoup_jsoup",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_aws_traits",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_build",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_codegen_core",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_jmespath",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_model",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_protocol_test_traits",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_protocol_traits",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_rules_engine",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_utils",
+        "@rules_smithy_maven//:software_amazon_smithy_smithy_waiters",
+    ],
 )
